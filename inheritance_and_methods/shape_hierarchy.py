@@ -112,3 +112,101 @@ Explanation:
 =================================================
 
 """
+# ==========================================
+# 1. Parent class: Shape
+# ==========================================
+class Shape:
+    def __init__(self, name):
+        self.name = name
+
+    def area(self):
+        raise NotImplementedError(
+            "Child classes must override area()"
+        )
+
+    def perimeter(self):
+        raise NotImplementedError(
+            "Child classes must override perimeter()"
+        )
+
+    def describe(self):
+        print(f"{self.name}: "
+              f"area={self.area()}, "
+              f"perimeter={self.perimeter()}")
+
+
+# ==========================================
+# 2. Child class: Circle
+# ==========================================
+class Circle(Shape):
+    def __init__(self, radius):
+        super().__init__("Circle")
+        self.radius = radius
+
+    def area(self):
+        return 3.14159 * self.radius * self.radius
+
+    def perimeter(self):
+        return 2 * 3.14159 * self.radius
+
+
+# ==========================================
+# 3. Child class: Rectangle
+# ==========================================
+class Rectangle(Shape):
+    def __init__(self, length, width):
+        super().__init__("Rectangle")
+        self.length = length
+        self.width = width
+
+    def area(self):
+        return self.length * self.width
+
+    def perimeter(self):
+        return 2 * (self.length + self.width)
+
+
+# ==========================================
+# 4. Child class: Triangle
+# ==========================================
+class Triangle(Shape):
+    def __init__(self, a, b, c):
+        super().__init__("Triangle")
+        self.a = a
+        self.b = b
+        self.c = c
+
+    def perimeter(self):
+        return self.a + self.b + self.c
+
+    def area(self):
+        # Heron's formula implementation
+        s = self.perimeter() / 2
+        area = (s * (s - self.a) * (s - self.b) * (s - self.c)) ** 0.5
+        return area
+
+
+# ==========================================
+# 5. Driver Code
+# ==========================================
+if __name__ == "__main__":
+    # Test 1: Create a base Shape object and call describe() to trigger NotImplementedError
+    print("--- Testing NotImplementedError ---")
+    try:
+        generic_shape = Shape("Generic Shape")
+        generic_shape.describe()
+    except NotImplementedError as e:
+        print(f"Caught expected error: {e}")
+    
+    print("\n--- Testing Child Classes Loop ---")
+    # Test 2: Create instances of child classes
+    circle = Circle(radius=5)
+    rectangle = Rectangle(length=4, width=6)
+    triangle = Triangle(a=3, b=4, c=5)
+
+    # Put them in a list
+    shapes_list = [circle, rectangle, triangle]
+
+    # Use a for loop to call describe() on each shape
+    for shape in shapes_list:
+        shape.describe()
