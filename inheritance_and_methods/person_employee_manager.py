@@ -155,3 +155,98 @@ Team total salary -> 173250.0 + 105000.0 + 84000.0
 =================================================
 
 """
+class Person:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+        print(f"Hi, I'm {self.name}, age {self.age}")
+
+    @staticmethod
+    def is_adult(age):
+        result = age >= 18
+        print(f"is_adult({age}) -> {result}")
+        return result
+
+
+class Employee(Person):
+    bonus_percentage = 5  # Class-wide bonus percentage starting at 5%
+
+    def __init__(self, name, age, emp_id, salary):
+        super().__init__(name, age)
+        self.emp_id = emp_id
+        self.salary = float(salary)
+        print(f"I work at Acme Corp as id {self.emp_id}")
+
+    def work_intro(self):
+        # Inherited from Employee logic (can be used for printing details)
+        pass
+
+    def apply_bonus(self):
+        # Applies the current class-wide bonus percentage to the salary
+        bonus_amount = self.salary * (Employee.bonus_percentage / 100)
+        self.salary += bonus_amount
+        print(f"{self.name} salary -> {self.salary}")
+
+    @classmethod
+    def set_bonus(cls, new_percentage):
+        cls.bonus_percentage = new_percentage
+
+
+class Manager(Employee):
+    def __init__(self, name, age, emp_id, salary, team=None):
+        super().__init__(name, age, emp_id, salary)
+        self.team = team if team is not None else []
+        print(f"I lead a team of {len(self.team)} people.")
+
+    def team_intro(self):
+        # Defined in Manager
+        pass
+
+    def add_member(self, employee):
+        self.team.append(employee)
+        # Update the team size message dynamically when members are added
+        print(f"I lead a team of {len(self.team)} people.")
+
+    def m_team_total_salary(self):
+        # Calculate total team salary including the manager
+        total = self.salary + sum(member.salary for member in self.team)
+        
+        # Build the exact string representation of the sum
+        breakdown = f"{self.salary}"
+        for member in self.team:
+            breakdown += f" + {member.salary}"
+            
+        print(f"Team total salary -> {breakdown}")
+        return total
+
+
+# --- Execution matching the Input Example ---
+print("--- Instantiation Phase ---")
+p = Person("Sam", 17)
+print()
+
+e1 = Employee("Alice", 25, "E001", 100000)
+e2 = Employee("Bob", 30, "E002", 80000)
+print()
+
+m = Manager("Carol", 40, "M001", 150000, [])
+m.add_member(e1)
+m.add_member(e2)
+print()
+
+print("--- Actions & Bonus System ---")
+e1.apply_bonus()
+e2.apply_bonus()
+m.apply_bonus()       # Inherited from Employee
+
+Employee.set_bonus(10)
+m.apply_bonus()       # Inherited, now at 10%
+print()
+
+print("--- Static Method Checks ---")
+Person.is_adult(17)
+Person.is_adult(25)
+print()
+
+print("--- Team Calculation ---")
+m.m_team_total_salary()

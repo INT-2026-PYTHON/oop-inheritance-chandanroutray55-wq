@@ -67,3 +67,40 @@ Rex is a Beagle
 =================================================
 
 """
+# 1. Define the parent class
+class Animal:
+    def __init__(self, name, sound):
+        self.name = name
+        self.sound = sound
+
+    def speak(self):
+        print(f"{self.name} says {self.sound}")
+
+
+# 2. Define the child class
+class Dog(Animal):
+    def __init__(self, name, breed):
+        # Call super().__init__ to let parent handle name and sound
+        super().__init__(name, "Woof")
+        self.breed = breed
+
+    def describe(self):
+        print(f"{self.name} is a {self.breed}")
+
+
+# 3. Driver code
+if __name__ == "__main__":
+    # Create one Animal and call speak()
+    a = Animal("Cat", "Meow")
+    a.speak()
+
+    # Create first Dog object and call both methods
+    d1 = Dog("Buddy", "Labrador")
+    d1.speak()
+    d1.describe()
+
+    # Create second Dog object and call both methods
+    d2 = Dog("Rex", "Beagle")
+    d2.speak()
+    d2.describe()
+   

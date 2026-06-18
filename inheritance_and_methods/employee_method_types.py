@@ -96,3 +96,70 @@ is_valid_salary("abc")  -> False
 =================================================
 
 """
+class Employee:
+    # Class attributes
+    company = "Acme Corp"
+    raise_pct = 5
+
+    def __init__(self, name, salary):
+        # Instance attributes
+        self.name = name
+        self.salary = salary
+
+    # 2. INSTANCE method
+    def apply_raise(self):
+        # Increase self.salary by raise_pct % (read Employee.raise_pct)
+        self.salary = self.salary * (1 + Employee.raise_pct / 100)
+
+    # 3. CLASS method: update raise percentage
+    @classmethod
+    def set_raise_percentage(cls, new_pct):
+        cls.raise_pct = new_pct
+
+    # 3. CLASS method: alternative constructor
+    @classmethod
+    def from_string(cls, csv_line):
+        # Split string (e.g., "Carol,75000")
+        name, salary_str = csv_line.split(",")
+        salary = float(salary_str)
+        # Build and RETURN a new Employee instance using cls(...)
+        return cls(name, salary)
+
+    # 4. STATIC method
+    @staticmethod
+    def is_valid_salary(amount):
+        # Return True if amount is an int or float AND amount > 0, else False
+        if isinstance(amount, (int, float)) and amount > 0:
+            return True
+        return False
+
+
+# 5. Driver Code
+
+# Create two employees using __init__
+e1 = Employee("Alice", 100000)
+e2 = Employee("Bob", 80000)
+
+# Create one employee using the alternate constructor
+e3 = Employee.from_string("Carol,75000")
+
+# Call apply_raise() on every employee (Initial 5% raise)
+e1.apply_raise()
+
+# Change the global raise via classmethod (Set to 10%)
+Employee.set_raise_percentage(10)
+
+# Call apply_raise() again for the remaining employees
+e2.apply_raise()
+e3.apply_raise()
+
+# Call Employee.is_valid_salary(...) with several values
+print(f"Is 50000 valid? {Employee.is_valid_salary(50000)}")
+print(f"Is -1000 valid? {Employee.is_valid_salary(-1000)}")
+print(f"Is 'abc' valid? {Employee.is_valid_salary('abc')}")
+print("-" * 30)
+
+# Print each employee's name and updated salary
+print(f"{e1.name}: {e1.salary:.2f}")
+print(f"{e2.name}: {e2.salary:.2f}")
+print(f"{e3.name}: {e3.salary:.2f}")
